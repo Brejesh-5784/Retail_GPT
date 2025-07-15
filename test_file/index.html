@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RetailGPT | AI Sales Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #667eea;
+      --secondary: #764ba2;
+      --light: #f8f9fa;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: var(--light);
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      flex: 1 1 200px;
+      background: var(--card-bg);
+      padding: 1rem;
+      border-left: 5px solid var(--primary);
+      box-shadow: var(--shadow);
+      border-radius: 10px;
+    }
+
+    .query-box {
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 20px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .query-box input {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      font-size: 1rem;
+      border-radius: 8px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 0.7rem 1.2rem;
+      background: var(--light);
+      border: 1px solid #ccc;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .tab-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0 0 10px 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .insights {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .insight {
+      flex: 1 1 300px;
+      background: #e9ecef;
+      padding: 1rem;
+      border-left: 4px solid #28a745;
+      border-radius: 8px;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      padding: 2rem;
+      background: #f1f3f5;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🛍️ RetailGPT: Holiday-Aware Sales Dashboard</h1>
+    <p>Powered by 5 AI Agents | SHAP | CPI | LLM Insights</p>
+  </header>
+
+  <div class="container">
+    <div class="metrics">
+      <div class="metric-card">
+        <h3>Total Sales</h3>
+        <p>$1,200,000</p>
+      </div>
+      <div class="metric-card">
+        <h3>Active Stores</h3>
+        <p>10</p>
+      </div>
+      <div class="metric-card">
+        <h3>Avg CPI</h3>
+        <p>4.5%</p>
+      </div>
+      <div class="metric-card">
+        <h3>Data Points</h3>
+        <p>5,000</p>
+      </div>
+    </div>
+
+    <div class="query-box">
+      <input type="text" id="queryInput" placeholder="Ask something like 'Why were Store 5’s sales low on Christmas?'" />
+    </div>
+
+    <div class="tabs" id="tabBar">
+      <div class="tab active" data-tab="business">🧠 Business</div>
+      <div class="tab" data-tab="shap">📊 SHAP</div>
+      <div class="tab" data-tab="memory">🔁 Memory</div>
+      <div class="tab" data-tab="cpi">💰 CPI</div>
+      <div class="tab" data-tab="tool">🛠️ Tool</div>
+    </div>
+
+    <div class="tab-content" id="tabContent">
+      <h3>Business Reasoning Output</h3>
+      <p>Ask a question to analyze root causes or trends in store performance using business logic and data-driven patterns.</p>
+    </div>
+
+    <div class="insights">
+      <div class="insight">
+        <h4>📈 Performance Drivers</h4>
+        <p>Seasonality, Promotions, and Inventory dynamics affect store sales heavily.</p>
+      </div>
+      <div class="insight">
+        <h4>🎯 Recommendations</h4>
+        <p>Launch pre-holiday campaigns 2 weeks early to maximize engagement.</p>
+      </div>
+      <div class="insight">
+        <h4>⚠️ Risk Factors</h4>
+        <p>High CPI could reduce customer spending on non-essential goods.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    🛍️ RetailGPT | Last updated: <span id="lastUpdated"></span> | LLM: Groq LLaMA 3-70B
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const content = document.getElementById('tabContent');
+
+    const tabResponses = {
+      business: "Business reasoning results will be shown here based on your query.",
+      shap: "SHAP analysis of feature importance for model predictions.",
+      memory: "Conversation history and memory-based insights will show here.",
+      cpi: "CPI impact analysis on sales and pricing strategies.",
+      tool: "Tool-based utilities like inflation calculator, CPI fetcher, etc."
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const key = tab.dataset.tab;
+        content.innerHTML = `<h3>${tab.innerText} Output</h3><p>${tabResponses[key]}</p>`;
+      });
+    });
+
+    document.getElementById("lastUpdated").textContent = new Date().toLocaleString();
+  </script>
+
+</body>
+</html>
